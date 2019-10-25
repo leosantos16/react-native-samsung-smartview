@@ -25,7 +25,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     private ReactApplicationContext reactContext;
     private final String LOGTAG = "SamsungSmartviewModule";
-    private List<Service> mDeviceList = new LinkedList<>();
+//    private List<Service> mDeviceList = new LinkedList<>();
     private VideoPlayer mVideoPlayer;
 
     private Search search;
@@ -34,10 +34,10 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
         super(reactContext);
         this.reactContext = reactContext;
         Log.v(LOGTAG, "SamsungSmartviewModule start");
-//
+
         // Get an instance of Search
         search = Service.search(this.reactContext);
-//
+
         // Add a listener for the service found event
         search.setOnServiceFoundListener(
                 new Search.OnServiceFoundListener() {
@@ -45,7 +45,8 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
                     @Override
                     public void onFound(Service service) {
                         Log.d(LOGTAG, "Search.onFound() service: " + service.toString());
-                        updateDeviceList(service);
+                        sendEventDeviceList();
+//                        updateDeviceList(service);
                     }
                 }
         );
@@ -66,31 +67,39 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
         search.start();
     }
 
-    public void updateDeviceList(Service device) {
-
-        Log.v(LOGTAG, "updateDeviceList");
-        if (mDeviceList.contains(device)) {
-            mDeviceList.remove(device);
-        }
-        mDeviceList.add(device);
-        JSONArray arrOfDevices = new JSONArray();
-        for (Service dev : mDeviceList) {
-            JSONObject json = new JSONObject();
-            try {
-                json.put("name", dev.getName());
-                json.put("uuid", dev.getId());
-            } catch (JSONException e) {
-                e.printStackTrace();
+    private void sendEventDeviceList() {
+        Log.v(LOGTAG, "sendDevices");
+        Log.v(LOGTAG, search.getServices().toString());
+        if (search.getServices() != null && search.getServices().size() > 0) {
+            JSONArray arrOfDevices = new JSONArray();
+            for (Service dev : search.getServices()) {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("name", dev.getName());
+                    json.put("uuid", dev.getId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                arrOfDevices.put(json);
             }
-            arrOfDevices.put(json);
+
+            WritableMap params = Arguments.createMap();
+            params.putString("devices", arrOfDevices.toString());
+            Log.v(LOGTAG, arrOfDevices.toString());
+            sendEvent("samsung_device_list", params);
         }
 
-
-        WritableMap params = Arguments.createMap();
-        params.putString("devices", arrOfDevices.toString());
-        Log.v(LOGTAG, arrOfDevices.toString());
-        sendEvent("samsung_device_list", params);
     }
+
+//    private void updateDeviceList(Service device) {
+//
+//        Log.v(LOGTAG, "updateDeviceList");
+//        if (mDeviceList.contains(device)) {
+//            mDeviceList.remove(device);
+//        }
+//        mDeviceList.add(device);
+//        sendEventDeviceList();
+//    }
 
     private void sendEvent(String eventName, WritableMap params) {
         this.reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName, params);
@@ -105,6 +114,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
     public void startSearch() {
         Log.v(LOGTAG, "startSearch");
         search.start();
+        sendEventDeviceList();
     }
 
     @ReactMethod
@@ -115,7 +125,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     private Service getServiceFromUUID(String targetUuid) {
         Service target = null;
-        for (Service device : mDeviceList) {
+        for (Service device : search.getServices()) {
             Log.v(LOGTAG, device.toString());
             if (device.getId().equals(targetUuid)) {
                 target = device;
