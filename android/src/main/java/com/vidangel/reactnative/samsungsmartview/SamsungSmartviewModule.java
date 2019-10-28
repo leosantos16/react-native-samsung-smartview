@@ -18,14 +18,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.LinkedList;
-import java.util.List;
 
 public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     private ReactApplicationContext reactContext;
     private final String LOGTAG = "SamsungSmartviewModule";
-//    private List<Service> mDeviceList = new LinkedList<>();
+    //    private List<Service> mDeviceList = new LinkedList<>();
     private VideoPlayer mVideoPlayer;
 
     private Search search;
@@ -140,22 +138,62 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
         Service service = getServiceFromUUID(targetUuid);
 
         Log.v(LOGTAG, service.toString());
+        Log.v(LOGTAG, targetUuid);
+        Log.v(LOGTAG, name);
 
         mVideoPlayer = service.createVideoPlayer("The Chosen");
-        // Add service to a displayed list where your user can select one.
-        // For display, we recommend that you show: service.getName()
-        mVideoPlayer.playContent(Uri.parse(name),
-                new Result<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean r) {
-                        Log.v(LOGTAG, "playContent(): onSuccess.");
-                    }
+        if (name.toLowerCase().contains(".jpg")) {
+            Log.v(LOGTAG, "mplayer standby");
+            mVideoPlayer.standbyConnect(
+                    new Result<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean r) {
+                            Log.v(LOGTAG, "playContent(): onSuccess.");
+                        }
 
-                    @Override
-                    public void onError(com.samsung.multiscreen.Error error) {
-                        Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
-                    }
-                });
+                        @Override
+                        public void onError(com.samsung.multiscreen.Error error) {
+                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+                        }
+                    });
+
+            // Passing through the jpg causes a cropped version on the tv. I don't know if
+            // this is due to the tv settings, or DMP. Passing no jpg shows the DMP screen, which
+            // will work for now. The client still needs to send through a jpg though to hit this
+            // block of code. Not clean at all, but I hope to come back through with more time later
+
+//            mVideoPlayer.standbyConnect(Uri.parse(name),
+//                    new Result<Boolean>() {
+//                        @Override
+//                        public void onSuccess(Boolean r) {
+//                            Log.v(LOGTAG, "playContent(): onSuccess.");
+//                        }
+//
+//                        @Override
+//                        public void onError(com.samsung.multiscreen.Error error) {
+//                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+//                        }
+//                    });
+        } else {
+
+            // Add service to a displayed list where your user can select one.
+            // For display, we recommend that you show: service.getName()
+            mVideoPlayer.playContent(Uri.parse(name),
+                    "The Chosen",
+                    Uri.parse("https://content.vidangel.com/chosen/cast.jpg"),
+                    new Result<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean r) {
+                            Log.v(LOGTAG, "playContent(): onSuccess.");
+                        }
+
+                        @Override
+                        public void onError(com.samsung.multiscreen.Error error) {
+                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+                        }
+                    });
+        }
+
 
     }
 
