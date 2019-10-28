@@ -31,7 +31,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
     public SamsungSmartviewModule(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
-        Log.v(LOGTAG, "SamsungSmartviewModule start");
+        //log.v(LOGTAG, "SamsungSmartviewModule start");
 
         // Get an instance of Search
         search = Service.search(this.reactContext);
@@ -42,7 +42,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void onFound(Service service) {
-                        Log.d(LOGTAG, "Search.onFound() service: " + service.toString());
+                        //log.d(LOGTAG, "Search.onFound() service: " + service.toString());
                         sendEventDeviceList();
 //                        updateDeviceList(service);
                     }
@@ -55,7 +55,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
                     @Override
                     public void onLost(Service service) {
-                        Log.d(LOGTAG, "Search.onLost() service: " + service.toString());
+                        //log.d(LOGTAG, "Search.onLost() service: " + service.toString());
 
                         // Remove this service from the displayed list.
                     }
@@ -66,8 +66,8 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
     }
 
     private void sendEventDeviceList() {
-        Log.v(LOGTAG, "sendDevices");
-        Log.v(LOGTAG, search.getServices().toString());
+        //log.v(LOGTAG, "sendDevices");
+        //log.v(LOGTAG, search.getServices().toString());
         if (search.getServices() != null && search.getServices().size() > 0) {
             JSONArray arrOfDevices = new JSONArray();
             for (Service dev : search.getServices()) {
@@ -83,7 +83,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
             WritableMap params = Arguments.createMap();
             params.putString("devices", arrOfDevices.toString());
-            Log.v(LOGTAG, arrOfDevices.toString());
+            //log.v(LOGTAG, arrOfDevices.toString());
             sendEvent("samsung_device_list", params);
         }
 
@@ -91,7 +91,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
 //    private void updateDeviceList(Service device) {
 //
-//        Log.v(LOGTAG, "updateDeviceList");
+//        //log.v(LOGTAG, "updateDeviceList");
 //        if (mDeviceList.contains(device)) {
 //            mDeviceList.remove(device);
 //        }
@@ -110,24 +110,24 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void startSearch() {
-        Log.v(LOGTAG, "startSearch");
+        //log.v(LOGTAG, "startSearch");
         search.start();
         sendEventDeviceList();
     }
 
     @ReactMethod
     public void stopSearch() {
-        Log.v(LOGTAG, "stopSearch");
+        //log.v(LOGTAG, "stopSearch");
         search.stop();
     }
 
     private Service getServiceFromUUID(String targetUuid) {
         Service target = null;
         for (Service device : search.getServices()) {
-            Log.v(LOGTAG, device.toString());
+//            //log.v(LOGTAG, device.toString());
             if (device.getId().equals(targetUuid)) {
                 target = device;
-                Log.v(LOGTAG, device.toString());
+//                //log.v(LOGTAG, device.toString());
             }
         }
         return target;
@@ -137,23 +137,23 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
     private void cast(final String targetUuid, final String name) {
         Service service = getServiceFromUUID(targetUuid);
 
-        Log.v(LOGTAG, service.toString());
-        Log.v(LOGTAG, targetUuid);
-        Log.v(LOGTAG, name);
+//        //log.v(LOGTAG, service.toString());
+//        //log.v(LOGTAG, targetUuid);
+//        //log.v(LOGTAG, name);
 
         mVideoPlayer = service.createVideoPlayer("The Chosen");
         if (name.toLowerCase().contains(".jpg")) {
-            Log.v(LOGTAG, "mplayer standby");
+            //log.v(LOGTAG, "mplayer standby");
             mVideoPlayer.standbyConnect(
                     new Result<Boolean>() {
                         @Override
                         public void onSuccess(Boolean r) {
-                            Log.v(LOGTAG, "playContent(): onSuccess.");
+                            //log.v(LOGTAG, "playContent(): onSuccess.");
                         }
 
                         @Override
                         public void onError(com.samsung.multiscreen.Error error) {
-                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+                            //log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
                         }
                     });
 
@@ -166,12 +166,12 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 //                    new Result<Boolean>() {
 //                        @Override
 //                        public void onSuccess(Boolean r) {
-//                            Log.v(LOGTAG, "playContent(): onSuccess.");
+//                            //log.v(LOGTAG, "playContent(): onSuccess.");
 //                        }
 //
 //                        @Override
 //                        public void onError(com.samsung.multiscreen.Error error) {
-//                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+//                            //log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
 //                        }
 //                    });
         } else {
@@ -184,12 +184,12 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
                     new Result<Boolean>() {
                         @Override
                         public void onSuccess(Boolean r) {
-                            Log.v(LOGTAG, "playContent(): onSuccess.");
+                            //log.v(LOGTAG, "playContent(): onSuccess.");
                         }
 
                         @Override
                         public void onError(com.samsung.multiscreen.Error error) {
-                            Log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
+                            //log.v(LOGTAG, "playContent(): onError: " + error.getMessage());
                         }
                     });
         }
@@ -199,19 +199,19 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void doPlay() {
-        Log.i(LOGTAG, "try doPlay...");
+        //log.i(LOGTAG, "try doPlay...");
         mVideoPlayer.play();
     }
 
     @ReactMethod
     private void doPause() {
-        Log.i(LOGTAG, "try doPause...");
+        //log.i(LOGTAG, "try doPause...");
         mVideoPlayer.pause();
     }
 
     @ReactMethod
     private void doStop() {
-        Log.i(LOGTAG, "try doStop...");
+        //log.i(LOGTAG, "try doStop...");
         mVideoPlayer.stop();
     }
 }
