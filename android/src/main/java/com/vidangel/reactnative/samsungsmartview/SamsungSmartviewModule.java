@@ -135,13 +135,18 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void cast(final String targetUuid, final String name) {
+        castContent(targetUuid, name, "Streaming App")
+    }
+
+    @ReactMethod
+    private void castContent(final String targetUuid, final String name, final String appName) {
         Service service = getServiceFromUUID(targetUuid);
 
 //        //log.v(LOGTAG, service.toString());
 //        //log.v(LOGTAG, targetUuid);
 //        //log.v(LOGTAG, name);
 
-        mVideoPlayer = service.createVideoPlayer("The Chosen");
+        mVideoPlayer = service.createVideoPlayer(appName);
         if (name.toLowerCase().contains(".jpg")) {
             //log.v(LOGTAG, "mplayer standby");
             mVideoPlayer.standbyConnect(
@@ -179,7 +184,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
             // Add service to a displayed list where your user can select one.
             // For display, we recommend that you show: service.getName()
             mVideoPlayer.playContent(Uri.parse(name),
-                    "The Chosen",
+                    appName,
                     Uri.parse("https://content.vidangel.com/chosen/cast.jpg"),
                     new Result<Boolean>() {
                         @Override
