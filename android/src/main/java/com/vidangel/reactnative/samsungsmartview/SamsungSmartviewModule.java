@@ -135,7 +135,7 @@ public class SamsungSmartviewModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     private void cast(final String targetUuid, final String name) {
-        castContent(targetUuid, name, "Streaming App");
+        castContent(targetUuid, name, "App");
     }
 
     @ReactMethod
