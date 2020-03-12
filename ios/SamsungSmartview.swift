@@ -115,6 +115,11 @@ class SamsungSmartview: RCTEventEmitter, ServiceSearchDelegate {
     videoPlayer?.stop()
   }
 
+  @objc func disconnect() {
+    videoPlayer?.disconnect()
+    videoPlayer = nil
+  }
+
   @objc func seek(_ time: Double) {
     let time_interval = TimeInterval(time)
     videoPlayer?.seek(time_interval)

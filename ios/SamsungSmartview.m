@@ -12,6 +12,7 @@ RCT_EXTERN_METHOD(
 RCT_EXTERN_METHOD(play)
 RCT_EXTERN_METHOD(pause)
 RCT_EXTERN_METHOD(stop)
+RCT_EXTERN_METHOD(disconnect)
 RCT_EXTERN_METHOD(seek:(double *)time)
 // RCT_EXTERN_METHOD(increment)
 // RCT_EXTERN_METHOD(getCount: (RCTResponseSenderBlock)callback)
