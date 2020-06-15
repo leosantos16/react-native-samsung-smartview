@@ -4,5 +4,4 @@
 
 @interface SamsungSmartview : RCTEventEmitter <RCTBridgeModule>
 - (void)onServiceFound(device: AnyObject);
-- (void)onServiceLost(device: AnyObject);
 @end

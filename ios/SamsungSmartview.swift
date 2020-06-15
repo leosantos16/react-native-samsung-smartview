@@ -1,7 +1,6 @@
 import Foundation
 
-@objc(SamsungSmartview)
-class Samsung : NSObject {
+@objc class Samsung : NSObject {
     let serviceSearch = Service.search();
     let msApplication: Application?
     var objcsmartview = SamsungSmartview();
@@ -16,7 +15,7 @@ class Samsung : NSObject {
     }
 
     @objc func onServiceLost(service: Service) {
-        self.sendEvent(withName: onServiceLost, body: service)
+        objcsmartview.onServiceFound(service)
     }
     
     @objc func startSearch() {

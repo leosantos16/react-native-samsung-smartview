@@ -5,12 +5,7 @@
 
 Samsung * swift = [Samsung new];
 
-- (void)onServiceFound(device: nil)
-{
-    [self sendEventWithName:@"samsung_device_list" body:device];
-}
-
-- (void)onServiceLost(device: nil)
+- (void)onServiceFound(device: AnyObject)
 {
     [self sendEventWithName:@"samsung_device_list" body:device];
 }
